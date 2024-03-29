@@ -3,8 +3,6 @@ from decouple import config
 from pathlib import Path
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.core.settings')
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -104,7 +102,7 @@ USE_TZ = True
 MEDIA_URL = "/media/"
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 STATIC_URL = '/static/'
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATIC_ROOT = BASE_DIR / 'staticfiles'
 
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
 
