@@ -28,7 +28,7 @@ INSTALLED_APPS = [
 
     # apps
     'apps.product',
-    'apps.establishment',
+    'apps.store',
     'apps.accounts'
 ]
 
