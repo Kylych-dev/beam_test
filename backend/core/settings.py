@@ -3,6 +3,9 @@ from decouple import config
 from pathlib import Path
 import os
 
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.core.settings')
+
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 SECRET_KEY = 'django-insecure-1ds0oupu^2=7yh&f^&7ivzf5_p7_jk_nr*64!y=jv+-7!xuta$'
