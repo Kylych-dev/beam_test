@@ -9,7 +9,7 @@ RUN pip install --upgrade pip
 
 
 COPY ./requirements.txt /usr/src/backend/requirements.txt
-RUN pip install -r /usr/src/backend/requirements.txt
+RUN pip install --no-cache-dir -r /usr/src/backend/requirements.txt
 
 COPY . /usr/src/backend/
 
