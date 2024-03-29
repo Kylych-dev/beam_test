@@ -14,7 +14,7 @@ from utils.customer_logger import log_error, log_warning
 class CategoryViewSet(viewsets.ModelViewSet):
     queryset = Category.objects.all()
     serializer_class = CategorySerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
         method="get",
@@ -66,12 +66,61 @@ class CategoryViewSet(viewsets.ModelViewSet):
                 {"message": str(ex)}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
+        
+
+    @swagger_auto_schema(
+        method="post",
+        operation_description="Создать категорию.",
+        operation_summary="Создание категории",
+        tags=["Категория"],
+        responses={
+            201: openapi.Response(description="Created - Категория успешно создана."),
+            400: openapi.Response(description="Неверный запрос - Некорректные данные"),
+        },
+    )
+    @action(detail=False, methods=['post'])
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as ex:
+            log_error(self, ex)
+            return Response(
+                {"message": str(ex)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    @swagger_auto_schema(
+        method="delete",
+        operation_description="Удалить категорию.",
+        operation_summary="Удаление категории",
+        tags=["Категория"],
+        responses={
+            204: openapi.Response(description="No Content - Категория успешно удалена."),
+            404: openapi.Response(description="Not Found - Категория не найдена"),
+        },
+    )
+    @action(detail=True, methods=['delete'])
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Http404 as ex:
+            log_warning(self, ex)
+            return Response(
+                {"message": "Категория не найдена"}, 
+                status=status.HTTP_404_NOT_FOUND
+            )
 
 
 class ProductViewSet(viewsets.ModelViewSet):
     queryset = Product.objects.all()
     serializer_class = ProductSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
         method="get",
@@ -96,25 +145,78 @@ class ProductViewSet(viewsets.ModelViewSet):
                 status=status.HTTP_400_BAD_REQUEST
             )
 
+
     @swagger_auto_schema(
-        method="get",
-        operation_description="Получить информацию о продукте.",
-        operation_summary="Информация о продукте",
+        method="post",
+        operation_description="Создать продукт.",
+        operation_summary="Создание продукта",
         tags=["Продукт"],
         responses={
-            200: openapi.Response(description="OK - Информация о продукте успешно получена."),
-            404: openapi.Response(description="Не найдено - Продукт не найден"),
+            201: openapi.Response(description="Created - Продукт успешно создан."),
+            400: openapi.Response(description="Неверный запрос - Некорректные данные"),
         },
     )
-    @action(detail=True, methods=['get'])
-    def retrieve(self, request, *args, **kwargs):
+    @action(detail=False, methods=['post'])
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as ex:
+            log_error(self, ex)
+            return Response(
+                {"message": str(ex)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    @swagger_auto_schema(
+        method="put",
+        operation_description="Обновить информацию о продукте.",
+        operation_summary="Обновление продукта",
+        tags=["Продукт"],
+        responses={
+            200: openapi.Response(description="OK - Продукт успешно обновлен."),
+            400: openapi.Response(description="Неверный запрос - Некорректные данные"),
+        },
+    )
+    @action(detail=True, methods=['put'])
+    def update(self, request, *args, **kwargs):
+        try:
+            partial = kwargs.pop('partial', False)
+            instance = self.get_object()
+            serializer = self.get_serializer(instance, data=request.data, partial=partial)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as ex:
+            log_error(self, ex)
+            return Response(
+                {"message": str(ex)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+    @swagger_auto_schema(
+        method="delete",
+        operation_description="Удалить продукт.",
+        operation_summary="Удаление продукта",
+        tags=["Продукт"],
+        responses={
+            204: openapi.Response(description="No Content - Продукт успешно удален."),
+            404: openapi.Response(description="Not Found - Продукт не найден"),
+        },
+    )
+    @action(detail=True, methods=['delete'])
+    def destroy(self, request, *args, **kwargs):
         try:
             instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
         except Http404 as ex:
             log_warning(self, ex)
             return Response(
-                {"message": "Объект не найден"}, 
+                {"message": "Продукт не найден"}, 
                 status=status.HTTP_404_NOT_FOUND
             )
