@@ -3,8 +3,6 @@ from decouple import config
 from pathlib import Path
 import os
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'backend.core.settings')
-
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
