@@ -24,20 +24,20 @@ urlpatterns.extend(
         path("category/", CategoryViewSet.as_view({"get": "list"}), name="category-list"),
         path("category/create/", CategoryViewSet.as_view({"post": "create"}), name="category-create"),
         path("category/update/<pk>/", CategoryViewSet.as_view({"put": "update"}), name="category-update"),
-        path("category/delete/<pk>/",CategoryViewSet.as_view({"delete": "delete"}), name="category-delete"),
+        path("category/delete/<pk>/", CategoryViewSet.as_view({"delete": "destroy"}), name="category-delete"),
 
 
         # product
         path("product/", ProductViewSet.as_view({"get": "list"}), name="product-list"),
         path("product/create/", ProductViewSet.as_view({"post": "create"}), name="product-create"),
         path("product/update/<pk>/", ProductViewSet.as_view({"put": "update"}), name="product-update"),
-        path("product/delete/<pk>/",ProductViewSet.as_view({"delete": "delete"}), name="product-delete"),
+        path("product/delete/<pk>/", ProductViewSet.as_view({"delete": "destroy"}), name="product-delete"),
 
 
         # Store
         path("store/", StoreViewSet.as_view({"get": "list"}), name="store-list"),
         path("store/create/", StoreViewSet.as_view({"post": "create"}), name="store-create"),
         path("store/update/<uuid:pk>/", StoreViewSet.as_view({"put": "update"}), name="store-update"),
-        path("store/delete/<uuid:pk>/",StoreViewSet.as_view({"delete": "delete"}), name="store-delete"),
+        path("store/delete/<uuid:pk>/", StoreViewSet.as_view({"delete": "delete"}), name="store-delete"),
     ]
 )

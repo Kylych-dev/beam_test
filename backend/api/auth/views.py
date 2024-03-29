@@ -47,14 +47,6 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         operation_summary="Создать пользователя.",
         operation_id="create_user",
         tags=["Пользователь"],
-        # request_body=openapi.Schema(
-        #     type=openapi.TYPE_OBJECT,
-        #     required=["email", "password"],
-        #     properties={
-        #         'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email пользователя'),
-        #         'password': openapi.Schema(type=openapi.TYPE_STRING, description='Пароль пользователя'),
-        #     },
-        # ),
         responses={
             201: openapi.Response(description="Created - Пользователь создан успешно."),
             400: openapi.Response(description="Bad Request - Некорректный запрос"),
@@ -106,14 +98,6 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         operation_summary="Обновить данные пользователя.",
         operation_id="update_user",
         tags=["Пользователь"],
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=["email", "password"],
-            properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email пользователя'),
-                'password': openapi.Schema(type=openapi.TYPE_STRING, description='Пароль пользователя'),
-            },
-        ),
         responses={
             200: openapi.Response(description="OK - Профиль пользователя обновлен успешно."),
             401: openapi.Response(description="Ошибка аутентификации"),

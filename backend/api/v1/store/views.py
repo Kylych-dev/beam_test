@@ -95,15 +95,6 @@ class StoreViewSet(viewsets.ModelViewSet):
         operation_description="Создать магазин.",
         operation_summary="Создание магазина",
         tags=["Магазин"],
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=["name", "locations", "manager"],
-            properties={
-                'name': openapi.Schema(type=openapi.TYPE_STRING, description='Название магазина'),
-                'locations': openapi.Schema(type=openapi.TYPE_STRING, description='Местоположение магазина'),
-                'manager': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID менеджера'),
-            },
-        ),
         responses={
             201: openapi.Response(description="Created - Магазин успешно создан."),
             400: openapi.Response(description="Bad Request - Некорректные данные"),
