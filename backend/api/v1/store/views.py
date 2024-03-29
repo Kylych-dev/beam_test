@@ -14,7 +14,7 @@ from utils.customer_logger import log_error, log_warning
 class StoreViewSet(viewsets.ModelViewSet):
     queryset = Store.objects.all()
     serializer_class = StoreSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
         method="get",
@@ -87,4 +87,63 @@ class StoreViewSet(viewsets.ModelViewSet):
             return Response(
                 {"message": str(ex)}, 
                 status=status.HTTP_400_BAD_REQUEST
+            )
+        
+    
+    @swagger_auto_schema(
+        method="post",
+        operation_description="Создать магазин.",
+        operation_summary="Создание магазина",
+        tags=["Магазин"],
+        request_body=openapi.Schema(
+            type=openapi.TYPE_OBJECT,
+            required=["name", "locations", "manager"],
+            properties={
+                'name': openapi.Schema(type=openapi.TYPE_STRING, description='Название магазина'),
+                'locations': openapi.Schema(type=openapi.TYPE_STRING, description='Местоположение магазина'),
+                'manager': openapi.Schema(type=openapi.TYPE_INTEGER, description='ID менеджера'),
+            },
+        ),
+        responses={
+            201: openapi.Response(description="Created - Магазин успешно создан."),
+            400: openapi.Response(description="Bad Request - Некорректные данные"),
+        },
+    )
+    @action(detail=False, methods=['post'])
+    def create(self, request, *args, **kwargs):
+        try:
+            serializer = self.get_serializer(data=request.data)
+            if serializer.is_valid():
+                serializer.save()
+                return Response(serializer.data, status=status.HTTP_201_CREATED)
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        except Exception as ex:
+            log_error(self, ex)
+            return Response(
+                {"message": str(ex)}, 
+                status=status.HTTP_400_BAD_REQUEST
+            )
+
+
+    @swagger_auto_schema(
+        method="delete",
+        operation_description="Удалить магазин.",
+        operation_summary="Удаление магазина",
+        tags=["Магазин"],
+        responses={
+            204: openapi.Response(description="No Content - Магазин успешно удален."),
+            404: openapi.Response(description="Not Found - Магазин не найден"),
+        },
+    )
+    @action(detail=True, methods=['delete'])
+    def delete(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Http404 as ex:
+            log_warning(self, ex)
+            return Response(
+                {"message": "Магазин не найден"}, 
+                status=status.HTTP_404_NOT_FOUND
             )

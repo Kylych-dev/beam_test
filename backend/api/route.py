@@ -14,10 +14,11 @@ urlpatterns.extend(
     [
         
         # user
-        path("users/", CustomUserViewSet.as_view({"get": "list"}), name="user-list"),
-        path("users/profile/", CustomUserViewSet.as_view({"get": "user_profile"}), name="user-profile"),
-        path("users/<int:pk>/", CustomUserViewSet.as_view({"get": "user_detail"}), name="user-detail"),
-        path("users/<int:pk>/update/", CustomUserViewSet.as_view({"put": "update_update"}), name="update-detail"),
+        path("user/", CustomUserViewSet.as_view({"get": "list"}), name="user-list"),
+        path("user/create/", CustomUserViewSet.as_view({"post": "create"}), name="user-create"),
+        path("user/update/<int:pk>/", CustomUserViewSet.as_view({"put": "update"}), name="user-update"),
+        path("user/delete/<int:pk>/", CustomUserViewSet.as_view({"delete": "destroy"}), name="user-delete"),
+
 
         # category
         path("category/", CategoryViewSet.as_view({"get": "list"}), name="category-list"),
