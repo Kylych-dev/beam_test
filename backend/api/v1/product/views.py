@@ -38,29 +38,7 @@ class CategoryViewSet(viewsets.ModelViewSet):
                 {"message": str(ex)}, 
                 status=status.HTTP_400_BAD_REQUEST
             )
-
-    @swagger_auto_schema(
-        method="get",
-        operation_description="Получить информацию о категории.",
-        operation_summary="Информация о категории",
-        tags=["Категория"],
-        responses={
-            200: openapi.Response(description="OK - Информация о категории успешно получена."),
-            404: openapi.Response(description="Не найдено - Категория не найдена"),
-        },
-    )
-    @action(detail=True, methods=['get'])
-    def retrieve(self, request, *args, **kwargs):
-        try:
-            instance = self.get_object()
-            serializer = self.get_serializer(instance)
-            return Response(serializer.data)
-        except Http404 as ex:
-            log_warning(self, ex)
-            return Response(
-                {"message": "Объект не найден"}, 
-                status=status.HTTP_404_NOT_FOUND
-            )
+        
 
     @swagger_auto_schema(
         method="put",

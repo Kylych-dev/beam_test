@@ -32,7 +32,6 @@ class CustomUser(AbstractBaseUser, PermissionsMixin):
     objects = UserManager()
 
     class Meta:
-        ordering = ("date_joined",)
         verbose_name = _("user")
         verbose_name_plural = _("users")
         app_label = "accounts"

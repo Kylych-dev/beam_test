@@ -14,14 +14,14 @@ from utils.customer_logger import log_error, log_warning
 class CustomUserViewSet(viewsets.ModelViewSet):
     queryset = CustomUser.objects.all()
     serializer_class = CustomUserSerializer
-    permission_classes = [permissions.IsAuthenticated]
+    # permission_classes = [permissions.IsAuthenticated]
 
     @swagger_auto_schema(
         method="get",
         operation_description="Получить список пользователей.",
         operation_summary="Получить список пользователей",
-        operation_id="list_users",
-        tags=["User"],
+        operation_id="list_user",
+        tags=["Пользователь"],
         responses={
             200: openapi.Response(description="OK - Список пользователей получено успешно."),
             401: openapi.Response(description="Ошибка аутентификации"),
@@ -46,15 +46,15 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         operation_description="Создать пользователя.",
         operation_summary="Создать пользователя.",
         operation_id="create_user",
-        tags=["User"],
-        request_body=openapi.Schema(
-            type=openapi.TYPE_OBJECT,
-            required=["email", "password"],
-            properties={
-                'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email пользователя'),
-                'password': openapi.Schema(type=openapi.TYPE_STRING, description='Пароль пользователя'),
-            },
-        ),
+        tags=["Пользователь"],
+        # request_body=openapi.Schema(
+        #     type=openapi.TYPE_OBJECT,
+        #     required=["email", "password"],
+        #     properties={
+        #         'email': openapi.Schema(type=openapi.TYPE_STRING, description='Email пользователя'),
+        #         'password': openapi.Schema(type=openapi.TYPE_STRING, description='Пароль пользователя'),
+        #     },
+        # ),
         responses={
             201: openapi.Response(description="Created - Пользователь создан успешно."),
             400: openapi.Response(description="Bad Request - Некорректный запрос"),
@@ -79,8 +79,8 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         method="get",
         operation_description="Получить профиль пользователя.",
         operation_summary="Получить профиль пользователя.",
-        operation_id="user_detail",
-        tags=["User"],
+        operation_id="detail_user",
+        tags=["Пользователь"],
         responses={
             200: openapi.Response(description="OK - Профиль пользователя получено."),
             401: openapi.Response(description="Ошибка аутентификации"),
@@ -105,7 +105,7 @@ class CustomUserViewSet(viewsets.ModelViewSet):
         operation_description="Обновить данные пользователя.",
         operation_summary="Обновить данные пользователя.",
         operation_id="update_user",
-        tags=["User"],
+        tags=["Пользователь"],
         request_body=openapi.Schema(
             type=openapi.TYPE_OBJECT,
             required=["email", "password"],
@@ -135,4 +135,29 @@ class CustomUserViewSet(viewsets.ModelViewSet):
             return Response(
                 {"Сообщение": str(ex)}, 
                 status
+            )
+        
+
+    @swagger_auto_schema(
+        method="delete",
+        operation_description="Удалить пользователя.",
+        operation_summary="Удаление пользователя",
+        operation_id="delete_user",
+        tags=["Пользователь"],
+        responses={
+            204: openapi.Response(description="No Content - Пользователь успешно удален."),
+            404: openapi.Response(description="Not Found - Пользователь не найден"),
+        },
+    )
+    @action(detail=True, methods=['delete'])
+    def destroy(self, request, *args, **kwargs):
+        try:
+            instance = self.get_object()
+            instance.delete()
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        except Http404 as ex:
+            log_warning(self, ex)
+            return Response(
+                {"Сообщение": "Пользователь не найден"}, 
+                status=status.HTTP_404_NOT_FOUND
             )
